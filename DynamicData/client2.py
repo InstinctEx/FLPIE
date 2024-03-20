@@ -1,7 +1,6 @@
 import argparse
 import time
 import numpy as np
-import os
 import flwr as fl
 import tensorflow as tf
 from tensorflow import keras
