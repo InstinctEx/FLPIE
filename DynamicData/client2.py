@@ -1,10 +1,11 @@
 import argparse
 import time
 import numpy as np
-
+import os
 import flwr as fl
 import tensorflow as tf
 from tensorflow import keras
+import urllib.request
 
 # Function to generate simulated sensor data (replace this with your actual sensor data source)
 def generate_sensor_data():
@@ -20,12 +21,15 @@ class FlowerClient(fl.client.NumPyClient):
         self.model = self.build_model()
 
     def build_model(self):
-        model = keras.Sequential([
-            keras.layers.Dense(64, activation='relu', input_shape=(1,)),
-            keras.layers.Dense(32, activation='relu'),
-            keras.layers.Dense(1)
-        ])
-        model.compile(optimizer='adam', loss='mse')
+        modelname = 'montelaki.keras'
+        if args.update == "True":
+            print("-------------DOWNLOADING MODEL-------------")
+            urllib.request.urlretrieve(
+            'http://192.168.1.6/montelaki.keras', modelname)
+            model = keras.models.load_model(modelname)
+        else:
+            print("-------------REUSE MODEL-------------")
+            model = keras.models.load_model(modelname)
         return model
 
     def get_parameters(self, config):
@@ -68,8 +72,10 @@ class FlowerClient(fl.client.NumPyClient):
 def main():
     parser = argparse.ArgumentParser(description="Flower Federated Learning Client")
     parser.add_argument("--server_address", type=str, default="localhost:8080", help="Server address")
+    parser.add_argument("--update", type=str, default="True", help="MODEL dwonlaod")
+    global args
     args = parser.parse_args()
-
+    
 
 
 

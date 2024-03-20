@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description="Flower Embedded devices")
 parser.add_argument(
     "--server_address",
     type=str,
-    default="0.0.0.0:8080",
+    default="127.0.0.1:8080",
     help=f"gRPC server address (deafault '0.0.0.0:8080')",
 )
 parser.add_argument(
@@ -34,7 +34,7 @@ parser.add_argument(
 
 # Define metric aggregation function
 def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
-    """This function averages teh `accuracy` metric sent by the clients in a `evaluate`
+    """This function averages the `accuracy` metric sent by the clients in a `evaluate`
     stage (i.e. clients received the global model and evaluate it on their local
     validation sets)."""
     # Multiply accuracy of each client by number of examples used
